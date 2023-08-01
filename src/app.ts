@@ -126,8 +126,18 @@ class ProjectList {
     this.sectionElement.id = `${this.type}-projects`; //* dynamically sets the id
 
     projectState.addListener((projects: Project[]) => {
+      //* to fix the entire project list being rendered in both active and finished, we use the filter method
+      const relevantProjects = projects.filter((prj) => {
+        if (this.type === "active") {
+          return prj.status === ProjectStatus.Active;
+        }
+        return prj.status === ProjectStatus.Finished;
+      });
+
       //* this updates state, creating a new projects array
-      this.assignedProjects = projects;
+      // this.assignedProjects = projects;
+      //* adding specificity to only store the correctly sorted projects array
+      this.assignedProjects = relevantProjects;
       this.renderProjects();
     });
 
@@ -137,6 +147,9 @@ class ProjectList {
 
   private renderProjects() {
     const listELement = document.getElementById(`${this.type}-projects-list`)! as HTMLUListElement;
+    //* we set innerHTML to an empty screen to clear the existing list before rendering to avoid duplicate projects
+    //* this could cause a hit to performance in a more robust app, but it's fine for this example
+    listELement.innerHTML = "";
     for (const projItem of this.assignedProjects) {
       const listItem = document.createElement("li");
       listItem.textContent = projItem.title;
