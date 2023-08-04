@@ -1,3 +1,17 @@
+//? Drag & Drop Interfaces
+interface Draggable {
+  //* DragEvent is a baked-in event
+  dragStartHandler(event: DragEvent): void;
+  //* this event was just added to print when a dragged item was released
+  // dragEndHandler(event: DragEvent): void;
+}
+
+interface DragTarget {
+  dragOverHandler(event: DragEvent): void;
+  dropHandler(event: DragEvent): void;
+  dragLeaveHandler(event: DragEvent): void;
+}
+
 //? Project Type
 enum ProjectStatus {
   Active,
@@ -68,6 +82,25 @@ class ProjectState extends State<Project> {
     //   people: numOfPeople,
     // };
     this.projects.push(newProject);
+    //? the following code was moved into the private updateListeners function below
+    // for (const listenerFunction of this.listeners) {
+    //   listenerFunction(this.projects.slice()); //* adding slice ensures that this is brand new copy of the array instead of mutating the original and possible messing up other references to it
+    // }
+    this.updateListeners();
+  }
+
+  //* added this method to handle DnD and how it affects ProjectStatus
+  moveProject(projectId: string, newStatus: ProjectStatus) {
+    //* since there's a chance the project is null we have to assign it to a variable and do a quick check instead of just automatically changing the status
+    const project = this.projects.find((proj) => proj.id === projectId);
+    //* adding a check to whether the item was moved or dropped in the same box saves some potential unnecessary re-renders
+    if (project && project.status !== newStatus) {
+      project.status = newStatus;
+    }
+    this.updateListeners();
+  }
+
+  private updateListeners() {
     for (const listenerFunction of this.listeners) {
       listenerFunction(this.projects.slice()); //* adding slice ensures that this is brand new copy of the array instead of mutating the original and possible messing up other references to it
     }
@@ -162,7 +195,8 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
 }
 
 //? ProjectItem Class
-class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+//* the 'implements' keyword is how you add interfaces to classes
+class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements Draggable {
   private project: Project;
 
   //* not a must-do, but convention is to add getters/setters before the constructor
@@ -182,7 +216,23 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
     this.renderContent();
   }
 
-  configure() {}
+  @AutoBind
+  dragStartHandler(event: DragEvent) {
+    //* dataTransfer is a special property attached to drag events
+    event.dataTransfer!.setData("text/plain", this.project.id);
+    event.dataTransfer!.effectAllowed = "move";
+  }
+
+  //* this event was just added to print when a dragged item was released
+  // dragEndHandler(_: DragEvent) {
+  //   console.log("DragEnd");
+  // }
+
+  configure() {
+    this.element.addEventListener("dragstart", this.dragStartHandler);
+    //* this event was just added to print when a dragged item was released
+    // this.element.addEventListener("dragend", this.dragEndHandler);
+  }
 
   renderContent() {
     this.element.querySelector("h2")!.textContent = this.project.title;
@@ -196,7 +246,7 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
 
 //? ProjectList Class
 //* we add 'extends Component' to cut down on duplicate code and increase reusability
-class ProjectList extends Component<HTMLDivElement, HTMLElement> {
+class ProjectList extends Component<HTMLDivElement, HTMLElement> implements DragTarget {
   //?this stuff is now in the Component class
   // templateElement: HTMLTemplateElement; //* everything between the <template> tags
   // hostElement: HTMLDivElement; //* the <div> where we want to render the templateElement
@@ -224,9 +274,39 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
     this.renderContent();
   }
 
+  @AutoBind
+  dragOverHandler(event: DragEvent) {
+    if (event.dataTransfer && event.dataTransfer.types[0] === "text/plain") {
+      //* the default for JS DnD events is to not allow dropping, so we have to manually prevent that
+      event.preventDefault();
+      const listEl = this.element.querySelector("ul")!;
+      listEl.classList.remove("droppable");
+    }
+    const listEl = this.element.querySelector("ul")!;
+    listEl.classList.add("droppable");
+  }
+
+  @AutoBind
+  dropHandler(event: DragEvent) {
+    const projId = event.dataTransfer!.getData("text/plain");
+    projectState.moveProject(
+      projId,
+      this.type === "active" ? ProjectStatus.Active : ProjectStatus.Finished
+    );
+  }
+
+  @AutoBind
+  dragLeaveHandler(_: DragEvent) {
+    const listEl = this.element.querySelector("ul")!;
+    listEl.classList.remove("droppable");
+  }
+
   //* not a must do, but convention is to have all public methods right below the constructor and before any private methods
   configure() {
     projectState.addListener((projects: Project[]) => {
+      this.element.addEventListener("dragover", this.dragOverHandler);
+      this.element.addEventListener("drop", this.dropHandler);
+      this.element.addEventListener("dragleave", this.dragLeaveHandler);
       //* to fix the entire project list being rendered in both active and finished, we use the filter method
       const relevantProjects = projects.filter((prj) => {
         if (this.type === "active") {
