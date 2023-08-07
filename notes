@@ -109,9 +109,9 @@ class ProjectState extends State<Project> {
 
 const projectState = ProjectState.getInstance(); //* instantiating a global constant and make sure that we only have and interact with one copy of the object in the whole application
 
-//? AutoBind decorator
+//? autobind decorator
 //* the _ and _2 just tells TS that you're aware you're not going to use these values, but that they must be accepted so that you can get to the third argument
-function AutoBind(_: any, _2: string, descriptor: PropertyDescriptor) {
+function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
   const originalMethod = descriptor.value;
   const adjustedDescriptor: PropertyDescriptor = {
     configurable: true,
@@ -216,7 +216,7 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> implements 
     this.renderContent();
   }
 
-  // @AutoBind //* this is used but is commented out because TS was complaining
+  // @autobind //* this is used but is commented out because TS was complaining
   dragStartHandler(event: DragEvent) {
     //* dataTransfer is a special property attached to drag events
     event.dataTransfer!.setData("text/plain", this.project.id);
@@ -274,7 +274,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
     this.renderContent();
   }
 
-  // @AutoBind //* this is used but is commented out because TS was complaining
+  // @autobind //* this is used but is commented out because TS was complaining
   dragOverHandler(event: DragEvent) {
     if (event.dataTransfer && event.dataTransfer.types[0] === "text/plain") {
       //* the default for JS DnD events is to not allow dropping, so we have to manually prevent that
@@ -286,7 +286,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
     listEl.classList.add("droppable");
   }
 
-  // @AutoBind //* this is used but is commented out because TS was complaining
+  // @autobind //* this is used but is commented out because TS was complaining
   dropHandler(event: DragEvent) {
     const projId = event.dataTransfer!.getData("text/plain");
     projectState.moveProject(
@@ -295,7 +295,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> implements Drag
     );
   }
 
-  // @AutoBind //* this is used but is commented out because TS was complaining
+  // @autobind //* this is used but is commented out because TS was complaining
   dragLeaveHandler(_: DragEvent) {
     const listEl = this.element.querySelector("ul")!;
     listEl.classList.remove("droppable");
@@ -459,7 +459,7 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
     this.peopleInputElement.value = "";
   }
 
-  // @AutoBind //* this is used but is commented out because TS was complaining
+  // @autobind //* this is used but is commented out because TS was complaining
   private submitHandler(event: Event) {
     event.preventDefault();
     const userInput = this.gatherUserInput();

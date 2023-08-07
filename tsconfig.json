@@ -3,7 +3,8 @@
     /* Basic Options */
     "target": "es6" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */,
     //* this was changed from commonjs to amd to make TS happy when we enabled outFile
-    "module": "amd" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
+    //* when refactoring from namespace to modules we need to change to es6
+    "module": "es2015" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
     "lib": [
       "dom",
       "es6",
@@ -16,8 +17,9 @@
     // "declaration": true,                   /* Generates corresponding '.d.ts' file. */
     // "declarationMap": true,                /* Generates a sourcemap for each corresponding '.d.ts' file. */
     "sourceMap": true /* Generates corresponding '.map' file. */,
-    //* in the project we enabled this upon refactoring with namespaces added the file path, creating the
-    "outFile": "./dist/bundle.js" /* Concatenate and emit output to single file. */,
+    //* in the project we enabled this upon refactoring with namespaces added the file path, creating the single compiled file
+    //* but when refactoring from namespace to modules we comment it back out because it's not supported with es modules
+    // "outFile": "./dist/bundle.js" /* Concatenate and emit output to single file. */,
     "outDir": "./dist" /* Redirect output structure to the directory. */,
     "rootDir": "./src" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */,
     // "composite": true,                     /* Enable project compilation */

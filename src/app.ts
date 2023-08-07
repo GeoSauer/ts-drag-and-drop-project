@@ -8,11 +8,14 @@
 // / <reference path='state/project-state.ts' />
 // / <reference path='util/validation.ts' />
 // / <reference path='decorators/autobind.ts' />
-/// <reference path='components/project-input.ts' />
-/// <reference path='components/project-list.ts' />
-
-namespace App {
-  new ProjectInput();
-  new ProjectList("active");
-  new ProjectList("finished");
-}
+//? -----------------------------------------------
+// / <reference path='components/project-input.ts' />
+// / <reference path='components/project-list.ts' />
+//? namespace isn't very safe for error checking so we changed some things in tsconfig and index.html to use es modules instead
+import { ProjectInput } from "./components/project-input.js";
+import { ProjectList } from "./components/project-list.js";
+// namespace App {
+new ProjectInput();
+new ProjectList("active");
+new ProjectList("finished");
+// }
