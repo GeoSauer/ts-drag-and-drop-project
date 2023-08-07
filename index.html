@@ -6,7 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>ProjectManager</title>
     <link rel="stylesheet" href="app.css" />
-    <script src="dist/app.js" defer></script>
+    <!--* changed this over when refactoring to namespaces and enabling outFile in tsconfig -->
+    <script src="dist/bundle.js" defer></script>
+    <!--* <script src="dist/app.js" defer></script> -->
   </head>
   <body>
     <template id="project-input">
@@ -27,7 +29,7 @@
       </form>
     </template>
     <template id="single-project">
-      //* this enables drag & drop for this element
+      <!--* this enables drag & drop for this element -->
       <li draggable="true">
         <h2></h2>
         <h3></h3>
