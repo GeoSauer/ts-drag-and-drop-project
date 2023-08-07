@@ -12,8 +12,8 @@
 // / <reference path='components/project-input.ts' />
 // / <reference path='components/project-list.ts' />
 //? namespace isn't very safe for error checking so we changed some things in tsconfig and index.html to use es modules instead
-import { ProjectInput } from "./components/project-input.js";
-import { ProjectList } from "./components/project-list.js";
+import { ProjectInput } from "./components/project-input";
+import { ProjectList } from "./components/project-list";
 // namespace App {
 new ProjectInput();
 new ProjectList("active");

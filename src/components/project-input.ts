@@ -1,17 +1,17 @@
 //* if a file has a default export it can be imported as its actual name or an alias, sans {}
-// import Comp from './base-component.js'
-import { Component } from "./base-component.js";
-import { Validatable, validate } from "../util/validation.js";
+// import Comp from './base-component'
+import { Component } from "./base-component";
+import { Validatable, validate } from "../util/validation";
 //* some other import methods
 //? GROUPING imports everything in the file in an object alias, can avoid name conflicts
 //? can be accessed with do notation Validate.Validatable...
-// import * as Validate from "../util/validation.js";
+// import * as Validate from "../util/validation";
 //? ALIASING lets you import under an alias to avoid name conflicts
-// import { autobind as AutoBind } from "../decorators/autobind.js";
+// import { autobind as AutoBind } from "../decorators/autobind";
 //! Max hot take:
 //? named imports can be better than defaults because they allow autocomplete and also enforce naming convention and avoid confusion with aliases
-import { autobind } from "../decorators/autobind.js";
-import { projectState } from "../state/project-state.js";
+import { autobind } from "../decorators/autobind";
+import { projectState } from "../state/project-state";
 // namespace App {
 export class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   titleInputElement: HTMLInputElement;

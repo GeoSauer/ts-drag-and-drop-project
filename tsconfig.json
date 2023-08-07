@@ -21,7 +21,8 @@
     //* but when refactoring from namespace to modules we comment it back out because it's not supported with es modules
     // "outFile": "./dist/bundle.js" /* Concatenate and emit output to single file. */,
     "outDir": "./dist" /* Redirect output structure to the directory. */,
-    "rootDir": "./src" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */,
+    //* after adding webpack, rootDir is no longer necessary here because webpack will determine that
+    // "rootDir": "./src" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */,
     // "composite": true,                     /* Enable project compilation */
     "removeComments": true /* Do not emit comments to output. */,
     // "noEmit": true,                        /* Do not emit outputs. */
