@@ -54,5 +54,9 @@ export class ProjectState extends State<Project> {
   }
 }
 
+//* to demonstrate when the code in modules executes when imported in multiple places we can add a console.log
+//* even though this code is imported into multiple file, the log only ever prints once
+console.log("RUNNING");
+
 export const projectState = ProjectState.getInstance();
 // }
